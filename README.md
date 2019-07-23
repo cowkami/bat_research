@@ -1,6 +1,7 @@
 # BAT 2019
 
 ## Directory Structure
+```
 .\
 +-- README.md\
 +-- data\
@@ -13,3 +14,4 @@
 +-- libs\
 +-- references\
 +-- requirements.txt
+```
