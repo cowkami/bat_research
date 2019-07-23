@@ -1,4 +1,4 @@
-# Hiryu Lab 2019
+# BAT 2019
 
 ## Directory Structure
 .\
@@ -12,4 +12,4 @@
 +-- notebooks           <- Jupyter notebooks\
 +-- libs\
 +-- references\
-+-- requirements.txt\
++-- requirements.txt
