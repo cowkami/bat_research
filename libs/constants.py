@@ -9,3 +9,4 @@ interim_path = data_path / 'interim'
 raw_190526_path = raw_path / '190526'
 pross_190526_path = processed_path / '190526'
 
+raw_sound_190526_path = raw_190526_path / 'teshima sound' / '20190525'
