@@ -1,3 +1,4 @@
+from time import sleep
 import numpy as np
 from scipy.signal import convolve2d
 import matplotlib.pyplot as plt
@@ -43,12 +44,12 @@ def convert_img_8bits(image):
     return (255 * ((image - mn) / (mx - mn))).astype('uint8')
 
 
-def derivative_2_frames(frame1, frame2):
+def derivative_2frames(frame1, frame2):
     f1, f2 = np.array(frame1), np.array(frame2)
     out = (f2[:, :] - f1[:, :])**2
-    out = normalize(out)
-    out = cv2.GaussianBlur(out, (25, 25), 2)
-    out = np.where(out<-0.2, out.max(), out.min())
+    #out = normalize(out)
+    #out = cv2.GaussianBlur(out, (25, 25), 2)
+    #out = np.where(out<-0.2, out.max(), out.min())
     out = convert_img_8bits(out)
     return out
 
@@ -129,7 +130,7 @@ def play(path_to_video, start=None, stop=0, frame_rate=50):
 
         frame_sum = np.zeros(frame1.shape)
         display = np.append(
-            #derivative_2_frames(frame1, frame2),
+            #derivative_2frames(frame1, frame2),
             optical_flow(frame1, frame2),
             convert_img_8bits(normalize(frame2)),
             axis=0
@@ -158,17 +159,36 @@ def play_video(video):
     while flag:
         for frame in video:
             cv2.imshow('frame', frame)
+            sleep(0.1)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 flag = False
                 break
     cv2.destroyAllWindows()
 
 
+def convert_video2feature(video, feature_func):
+    feature = []
+    for i in range(video.shape[0]-1):
+        feature.append(feature_func(video[i], video[i+1]))
+    return np.array(feature)
+
+
+def test_func(frame1, frame2):
+    opf = cv2.cvtColor(optical_flow(frame1, frame2), cv2.COLOR_BGR2GRAY)
+    drv = cv2.cvtColor(derivative_2frames(frame1, frame2), cv2.COLOR_BGR2GRAY)
+    out = normalize(opf*drv)
+    out = cv2.GaussianBlur(out, (25, 25), 2)
+    out = np.where(out<-0.2, out.max(), out.min())
+    out = convert_img_8bits(out)
+    return out
+
+
 def main():
 #    play(VIDEO_PATHS[31])
     #cal_mean_frame(VIDEO_PATHS[30])
     v = load_video(VIDEO_PATHS[30])
-    play_video(v)
+    f = convert_video2feature(v, test_func)
+    play_video(f)
 
 
 if __name__ == '__main__':
