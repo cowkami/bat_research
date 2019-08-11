@@ -3,5 +3,6 @@ start
 connect
 /data
 /venv
+/notebooks/*.png
 .ipynb_checkpoints
 *.pyc
